@@ -12,12 +12,19 @@ pipeline {
                 checkout scm
                 script {
                     // Check if there are changes since last successful build
-                    def changeLogSets = currentBuild.changeSets
-                    if (changeLogSets.size() > 0) {
+                    def lastSuccessfulCommit = null
+                    def currentCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+
+                    def lastSuccessfulBuild = currentBuild.previousSuccessfulBuild
+                    if (lastSuccessfulBuild) {
+                        lastSuccessfulCommit = lastSuccessfulBuild.getEnvironment().GIT_COMMIT
+                    }
+
+                    if (lastSuccessfulCommit == null || lastSuccessfulCommit != currentCommit) {
                         env.HAS_CHANGES = 'true'
-                        echo "Changes detected: ${changeLogSets.size()} change set(s)"
+                        echo "Changes detected. Current: ${currentCommit}, Last: ${lastSuccessfulCommit ?: 'none'}"
                     } else {
-                        echo "No changes detected since last build"
+                        echo "No changes detected since last successful build"
                     }
                 }
             }
