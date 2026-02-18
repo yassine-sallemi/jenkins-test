@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        docker { image 'node:18-alpine' }
-    }
+    agent any
     environment {
         IMAGE_NAME = 'myapp'
         REGISTRY = 'yassine251/mon-app-devops'
@@ -14,6 +12,9 @@ pipeline {
             }
         }
         stage('Unit Tests') {
+            agent {
+                docker { image 'node:18-alpine' }
+            }
             steps {
                 sh 'npm install'
                 sh 'npm test'
@@ -21,7 +22,7 @@ pipeline {
         }
         stage('Docker Build') {
             steps {
-                sh "/usr/local/bin/docker build \
+                sh "docker build \
                 -t ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER} \
                 -t ${REGISTRY}/${IMAGE_NAME}:latest \
                 ."
@@ -30,9 +31,9 @@ pipeline {
         stage('Docker Push') {
             steps{
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh "echo $DOCKER_PASSWORD | /usr/local/bin/docker login -u $DOCKER_USERNAME --password-stdin"
-                    sh "/usr/local/bin/docker push ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}"
-                    sh "/usr/local/bin/docker push ${REGISTRY}/${IMAGE_NAME}:latest"
+                    sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                    sh "docker push ${REGISTRY}/${IMAGE_NAME}:${BUILD_NUMBER}"
+                    sh "docker push ${REGISTRY}/${IMAGE_NAME}:latest"
                 }
             }
         }
