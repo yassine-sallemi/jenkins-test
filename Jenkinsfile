@@ -1,7 +1,6 @@
 pipeline {
-    agent any
-    tools {
-        nodejs 'Node25'
+    agent {
+        docker { image 'node:18-alpine' }
     }
     environment {
         IMAGE_NAME = 'myapp'
