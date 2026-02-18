@@ -31,5 +31,5 @@ app.get('/no', (req, res) => {
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`No-as-a-Service is running on port ${PORT}`);
+  console.log(`No-as-a-Service is running now on port ${PORT}`);
 });
