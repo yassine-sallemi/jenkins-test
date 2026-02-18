@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        nodejs 'Node25'
+    }
     environment {
         IMAGE_NAME = 'myapp'
         REGISTRY = 'yassine251/mon-app-devops'
