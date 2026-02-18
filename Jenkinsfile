@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        IMAGE_NAME = 'myapp'
-        REGISTRY = 'yassine251/mon-app-devops'
+        IMAGE_NAME = 'mon-app-devops'
+        REGISTRY = 'yassine251'
         DOCKERHUB_CREDENTIALS = credentials('docker-hub-credentials')
     }
     stages {
