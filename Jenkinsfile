@@ -1,6 +1,9 @@
 pipeline {
     agent {
-        docker { image 'node:18-alpine' }
+        docker {
+            image 'node:18-alpine'
+            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        }
     }
     environment {
         IMAGE_NAME = 'myapp'
